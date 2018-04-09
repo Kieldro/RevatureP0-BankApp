@@ -3,7 +3,7 @@ package com.revature.project0;
 public class User {
 	String name;
 	
-	float balance;
+	public float balance;
 	public User(String name) {
 		this.name = name;
 	}
