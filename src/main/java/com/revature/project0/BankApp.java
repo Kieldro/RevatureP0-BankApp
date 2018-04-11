@@ -1,13 +1,32 @@
 package com.revature.project0;
 
+import org.apache.log4j.Logger;
+
 import java.util.Scanner;
 
 public class BankApp {
 	private static Scanner sc = new Scanner(System.in);
 	private static User u;
+	final static Logger logger = Logger.getLogger(BankApp.class);
 
 	public static void main(String[] args) {
-		createUser();
+//		logger.all("all level");
+		logger.trace("trace level");
+		logger.debug("debug level");
+		logger.info("info level - System start");
+		logger.warn("warn level");
+		logger.error("error level");
+		logger.fatal("fatal level");
+//		ALL, TRACE, DEBUG, INFO, WARN, ERROR and FATAL
+		
+		System.out.println("Enter 1 to create a customer account or 2 to create an " + "admin account: ");
+		int option = sc.nextInt();
+
+		if (option == 1) {
+			createUser();
+		} else if (option == 2) {
+			createAdmin();
+		}
 		changeBal();
 
 	}
@@ -33,9 +52,19 @@ public class BankApp {
 	}
 
 	public static void createUser() {
-		// System.out.println("Enter 1 to create a customer account or 2 to create an
-		// admin account: ");
 		System.out.println("Create a user account: ");
+		System.out.println("Enter new user name: ");
+
+		String name = sc.nextLine();
+		System.out.println("Entered name: " + name);
+		u = new User(name);
+		logger.debug("User created" + u.name);
+
+		System.out.println(u.name + " your balance is : $" + u.balance);
+	}
+
+	public static void createAdmin() {
+		System.out.println("Create an admin account: ");
 		System.out.println("Enter new user name: ");
 
 		String name = sc.nextLine();
@@ -49,5 +78,7 @@ public class BankApp {
 	protected void finalize() throws Throwable {
 		super.finalize();
 		sc.close();
+		logger.trace("scanner closed");
+
 	}
 }
