@@ -1,34 +1,86 @@
 package com.revature.project0;
 
-import org.apache.log4j.Logger;
-
+import java.sql.*;
+import java.sql.Connection;
+//import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
+
+import org.apache.log4j.Logger;
 
 public class BankApp {
 	private static Scanner sc = new Scanner(System.in);
 	private static User u;
 	final static Logger logger = Logger.getLogger(BankApp.class);
+	static Connection con;
+
+	static {
+		logger.trace("static block executing");
+		logger.trace("creating connection");
+		con = ConnectionUtil.getConnection();
+
+		System.out.println(con);
+	}
 
 	public static void main(String[] args) {
-//		logger.all("all level");
-		logger.trace("trace level");
-		logger.debug("debug level");
+		// logger.all("all level");
+		// logger.trace("trace level");
+		// logger.debug("debug level");
 		logger.info("info level - System start");
-		logger.warn("warn level");
-		logger.error("error level");
-		logger.fatal("fatal level");
-//		ALL, TRACE, DEBUG, INFO, WARN, ERROR and FATAL
-		
-		System.out.println("Enter 1 to create a customer account or 2 to create an " + "admin account: ");
-		int option = sc.nextInt();
+		// logger.warn("warn level");
+		// logger.error("error level");
+		// logger.fatal("fatal level");
+		// ALL, TRACE, DEBUG, INFO, WARN, ERROR and FATAL
 
-		if (option == 1) {
-			createUser();
-		} else if (option == 2) {
-			createAdmin();
+		db();
+
+		// System.out.println("Enter 1 to create a customer account or 2 to create an "
+		// + "admin account: ");
+		// int option = sc.nextInt();
+		//
+		// if (option == 1) {
+		// createUser();
+		// } else if (option == 2) {
+		// createAdmin();
+		// }
+		// changeBal();
+
+		// sc.close();
+//		logger.trace("scanner closed");
+		logger.trace("end of main.");
+	}
+
+	public static void db() {
+		logger.debug("db() running");
+		Statement stmt;
+		try {
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM employee");
+			printRS(rs);
+
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());		// prints in red!:D
+			System.err.println("SQL State: " + e.getSQLState());
+			System.err.println("Error code: " + e.getErrorCode());
 		}
-		changeBal();
 
+		logger.debug("db() ending");
+	}
+	
+	public static void printRS(ResultSet rs) throws SQLException {
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int columnsNumber = rsmd.getColumnCount();
+		while (rs.next()) {
+			for (int i = 1; i <= columnsNumber; i++) {
+				if (i > 1)
+					System.out.print(",  ");
+				String columnValue = rs.getString(i);
+				System.out.print(columnValue + "\t "// + rsmd.getColumnName(i)
+				);
+			}
+			System.out.println("");
+		}
 	}
 
 	public static void changeBal() {
@@ -77,8 +129,6 @@ public class BankApp {
 	// @Override
 	protected void finalize() throws Throwable {
 		super.finalize();
-		sc.close();
-		logger.trace("scanner closed");
 
 	}
 }
