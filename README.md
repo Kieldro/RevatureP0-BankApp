@@ -6,6 +6,7 @@ Revature 1804_Apr JTA
 Ian Buitrago
 Trainer: Yuvi D
 
+requirements
 Below are the core ones (everyone MUST accomplish them)
 -account creation (admin and user role)
 --admins must approve users before they can be used
@@ -14,3 +15,6 @@ Below are the core ones (everyone MUST accomplish them)
 -everything must NOT be in the main method.
 -data must be persisted - JDBC
 -collect data inputs from console
+
+crud
+create retreive update delete	
