@@ -1,6 +1,5 @@
 package com.revature.project0;
 
-import java.io.FileInputStream;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -10,11 +9,7 @@ public class BankApp {
 	private static Scanner sc = new Scanner(System.in);
 	private static User u;
 	final static Logger logger = Logger.getLogger(BankApp.class);
-
-	static {
-		// logger.trace("static block executing");
-	}
-
+	
 	public static void main(String[] args) throws Exception {
 		// logger.all("all level");
 		// logger.trace("trace level");
