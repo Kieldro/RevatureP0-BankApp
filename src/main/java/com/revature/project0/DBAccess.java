@@ -3,7 +3,7 @@ package com.revature.project0;
 public interface DBAccess {
 	boolean insertUser(User user);
 
-	// public User getCustomer(String email);
+	public User getUser(String name);
 
 	// public abstract List<User> getAllCustomers();
 

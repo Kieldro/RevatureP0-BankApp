@@ -8,8 +8,9 @@ import org.apache.log4j.Logger;
 public class BankApp {
 	private static Scanner sc = new Scanner(System.in);
 	private static User u;
+
 	final static Logger logger = Logger.getLogger(BankApp.class);
-	
+
 	public static void main(String[] args) throws Exception {
 		// logger.all("all level");
 		// logger.trace("trace level");
@@ -21,11 +22,8 @@ public class BankApp {
 		// ALL, TRACE, DEBUG, INFO, WARN, ERROR and FATAL
 
 		loop: while (true) {
-			System.out.println("Options:\n"
-					+ "1 to create a customer account\n"
-					+ "2 to create an admin account\n"
-							+ "0 to exit system\n"
-							+ "Enter option: ");
+			System.out.println("Options:\n" + "1 to create a customer account\n" + "2 to create an admin account\n"
+					+ "0 to exit system\n" + "Enter option: ");
 			int option = sc.nextInt();
 			sc.nextLine();
 			logger.trace("option entered: " + option);
@@ -61,7 +59,14 @@ public class BankApp {
 		logger.debug("Entered name: " + name);
 		logger.trace("name length: " + name.length());
 		u = new User(name);
-		// logger.debug("User created" + u.name);
+		final DBAccessor doa = DBAccessor.getInstance();
+		boolean inserted = doa.insertUser(u);
+		if (inserted) {
+			logger.debug("User created: " + u.name);
+		}else {
+			logger.debug("User could NOT be created: " + u.name);
+			}
+
 	}
 
 	private static void approveUsers() {

@@ -15,6 +15,3 @@ Below are the core ones (everyone MUST accomplish them)
 -everything must NOT be in the main method.
 -data must be persisted - JDBC
 -collect data inputs from console
-
-crud
-create retreive update delete	

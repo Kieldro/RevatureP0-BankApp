@@ -21,9 +21,9 @@ public class ConnectionUtil {
 		logger = BankApp.logger;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(ConnectionUtil.getConnection());
-	}
+//	public static void main(String[] args) {
+//		System.out.println(ConnectionUtil.getConnection());
+//	}
 
 	public static Connection getConnection() {
 		InputStream in = null;
