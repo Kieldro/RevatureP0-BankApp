@@ -31,9 +31,12 @@ public class DBAccessor implements DBAccess {
 		try (Connection con = ConnectionUtil.getConnection()) {
 			PreparedStatement ps = con
 					.prepareStatement("SELECT name, balance, admin, approved " 
-									+ "FROM user WHERE name = ?");
+									+ "FROM user_account WHERE name = ?");
 			ps.setString(1, name);
+			BankApp.logger.trace("query executing...");
 			ResultSet rs = ps.executeQuery();
+
+			BankApp.logger.trace("query done.");
 			if (rs.next()) {
 				return new User(rs.getString("name"), rs.getFloat("balance"), 
 						rs.getBoolean("admin"), rs.getBoolean("approved"));

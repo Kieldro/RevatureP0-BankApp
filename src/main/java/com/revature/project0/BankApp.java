@@ -8,10 +8,12 @@ import org.apache.log4j.Logger;
 public class BankApp {
 	private static Scanner sc = new Scanner(System.in);
 	private static User u;
+	final static DBAccessor doa = DBAccessor.getInstance();
 
 	final static Logger logger = Logger.getLogger(BankApp.class);
 
 	public static void main(String[] args) throws Exception {
+		// ALL, TRACE, DEBUG, INFO, WARN, ERROR and FATAL
 		// logger.all("all level");
 		// logger.trace("trace level");
 		// logger.debug("debug level");
@@ -19,8 +21,12 @@ public class BankApp {
 		// logger.warn("warn level");
 		// logger.error("error level");
 		// logger.fatal("fatal level");
-		// ALL, TRACE, DEBUG, INFO, WARN, ERROR and FATAL
+		
 
+		User u = doa.getUser("Ian");
+		System.out.println(u);
+
+		// input loop
 		loop: while (true) {
 			System.out.println("Options:\n" + "1 to create a customer account\n" + "2 to create an admin account\n"
 					+ "0 to exit system\n" + "Enter option: ");
@@ -59,7 +65,6 @@ public class BankApp {
 		logger.debug("Entered name: " + name);
 		logger.trace("name length: " + name.length());
 		u = new User(name);
-		final DBAccessor doa = DBAccessor.getInstance();
 		boolean inserted = doa.insertUser(u);
 		if (inserted) {
 			logger.debug("User created: " + u.name);
