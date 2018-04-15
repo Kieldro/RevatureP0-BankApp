@@ -11,7 +11,7 @@ public class User implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 5539802788837931219L;
-	String name;
+	public String name;
 	public float balance = 0;
 	public boolean admin = false;
 	public boolean approved = false;
