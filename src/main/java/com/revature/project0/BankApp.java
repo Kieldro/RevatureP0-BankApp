@@ -84,10 +84,13 @@ public class BankApp {
 	}
 
 	public static void createUser() {
-		System.out.println("Enter a new user name: ");
-		String name = sc.nextLine();
-		logger.debug("Entered name: " + name);
-		logger.trace("name length: " + name.length());
+		String name = null;
+		do {
+			System.out.println("Enter a new user name: ");
+			name = sc.nextLine();
+		} while (dao.getUser(name) != null);
+		// logger.debug("Entered name: " + name);
+		// logger.trace("name length: " + name.length());
 		System.out.println("Enter a password: ");
 		String password = sc.nextLine();
 
@@ -103,7 +106,7 @@ public class BankApp {
 	private static void approveUsers() {
 		System.out.println("Approve users");
 
-		Map<String, User> m = User.users;
+		Map<String, User> m = dao.getAllUsers();
 		if (m.isEmpty()) {
 			System.out.println("No users in the system.");
 			return;

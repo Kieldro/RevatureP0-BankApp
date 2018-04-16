@@ -5,7 +5,7 @@ CREATE TABLE user_account (
 --    user_id     int,
     name       VARCHAR2(40),
     password   VARCHAR2(40) default 'asd',
-    balance    FLOAT default 0,
+    balance    number (13,2)default 0,
     admin      INT default 0,
     approved   INT default 0,
     CONSTRAINT pk_name PRIMARY KEY ( name ),
@@ -58,3 +58,29 @@ BEGIN
     COMMIT;
 END;
 /
+-- Park's tables
+CREATE TABLE User_Customer
+(
+    Customer_Id INTEGER,
+    First_Name VARCHAR2 (160),
+   Last_Name VARCHAR2 (160),
+    User_Name VARCHAR2 (160),
+   User_Password VARCHAR2 (160),
+    Approval INTEGER DEFAULT 0,
+    
+   CONSTRAINT Unique_User UNIQUE (User_Name),
+    CONSTRAINT PK_User_Customer PRIMARY KEY (Customer_Id)    
+);
+
+CREATE TABLE User_Account
+(
+    Account_Id INTEGER,
+    Account_Name VARCHAR2 (160),
+    User_Name VARCHAR2 (160),
+    Acct_Creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Balance NUMBER DEFAULT 0,
+
+    CONSTRAINT PK_User_Account PRIMARY KEY (Account_Id),
+   CONSTRAINT FK_Customer_User FOREIGN KEY (User_Name)
+   REFERENCES User_Customer(User_Name)
+);
