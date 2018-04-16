@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBAccessor implements DBAccess {
 	private static DBAccessor instance;
@@ -56,7 +58,7 @@ public class DBAccessor implements DBAccess {
 			BankApp.logger.trace("executing INSERT...");
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+			System.err.print(e.getMessage());
 			System.err.println("SQL State: " + e.getSQLState());
 			System.err.println("Error code: " + e.getErrorCode());
 		}
@@ -104,5 +106,32 @@ public class DBAccessor implements DBAccess {
 
 		BankApp.logger.debug("UPDATE user modified 0 rows: " + u);
 		return false;
+	}
+
+	@Override
+	public Map<String, User> getAllUsers() {
+		Map<String, User> um = new HashMap<>();
+		try (Connection con = ConnectionUtil.getConnection()) {
+			PreparedStatement ps = con
+					.prepareStatement("SELECT name, balance, admin, approved "
+							+ "FROM user_account");
+			BankApp.logger.trace("getAllUsers query executing...");
+			ResultSet rs = ps.executeQuery();
+			BankApp.logger.trace("query done.");
+			while (rs.next()) {
+				User u = new User(rs.getString("name"), 
+							rs.getFloat("balance"),
+							rs.getBoolean("admin"),
+							rs.getBoolean("approved"));
+				um.put(u.name, u);
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+			System.err.println("SQL State: " + e.getSQLState());
+			System.err.println("Error code: " + e.getErrorCode());
+		}
+
+		BankApp.logger.debug("getAll elements in map: " + um.size());
+		return um;
 	}
 }

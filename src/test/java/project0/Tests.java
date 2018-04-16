@@ -7,15 +7,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.revature.project0.*;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
+import com.revature.project0.BankApp;
+import com.revature.project0.ConnectionUtil;
+import com.revature.project0.DBAccess;
+import com.revature.project0.DBAccessor;
+import com.revature.project0.User;
 
 public class Tests {
 	final static Logger logger = Logger.getLogger(BankApp.class);
@@ -91,7 +96,37 @@ public class Tests {
 //		System.out.println("u.balance: " + u.balance);
 		logger.trace("testUpdate() finished.");
 	}
+	
+	@Test
+	public void test4getAllUsers() {
+		logger.trace("testing getAllUsers()...");
+//		String name = "Jane";
+		DBAccess dao = DBAccessor.getInstance();
+		Map<String, User> um = dao.getAllUsers();;
+//		assert(u != null);
+//		System.out.println("User before update: " + u);
+		
+		System.out.println("user map: " + um);
+//		System.out.println("u.balance: " + u.balance);
+		logger.trace("testGetAll() finished.");
+	}
+	
+	@Test
+	public void test5getAllUsers() {
+		logger.trace("testing getAllUsers5()...");
+		DBAccess dao = DBAccessor.getInstance();
+		dao.insertUser(new User("Jack"));
+		Map<String, User> um = dao.getAllUsers();;
 
+		System.out.println("user map: " + um);
+		logger.trace("testGetAll5() finished.");
+	}
+
+
+
+	
+	
+	
 	@Test
 	public void testGetCon() {
 		try (Connection con = ConnectionUtil.getConnection()) {

@@ -1,5 +1,7 @@
 package com.revature.project0;
 
+import java.util.Map;
+
 public interface DBAccess {
 	public boolean insertUser(User user);
 
@@ -9,5 +11,5 @@ public interface DBAccess {
 
 	public boolean deleteUser(User user);
 
-	// public abstract List<User> getAllCustomers();
+	 public abstract Map<String, User> getAllUsers();
 }

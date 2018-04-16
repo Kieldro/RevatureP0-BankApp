@@ -29,7 +29,7 @@ CREATE TABLE user_account (
 
 --test commands
 SELECT * FROM user_account;
-INSERT INTO user_account VALUES ('Jane', 6.66, 0, 0);commit;
+INSERT INTO user_account VALUES ('Jane', 6.66, 0, 0);commit;        -- dummy row used for testing
 INSERT INTO user_account VALUES ('Ian', 123.45, 1, 1);
 
 
