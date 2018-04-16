@@ -18,24 +18,25 @@ SELECT * FROM user_account;
 
 	UPDATE user_account SET balance = 4.0, approved = 0 WHERE name = 'Ian B';
 	
-
+DROP TABLE user_account;
 CREATE TABLE user_account (
     name       VARCHAR2(40),
-    balance    FLOAT,
-    admin      INT,
-    approved   INT,
+    password   VARCHAR2(40) default 'asd',
+    balance    FLOAT default 0,
+    admin      INT default 0,
+    approved   INT default 0,
     CONSTRAINT pk_name PRIMARY KEY ( name )
 );
 
 --test commands
 SELECT * FROM user_account;
-INSERT INTO user_account VALUES ('Jane', 6.66, 0, 0);commit;        -- dummy row used for testing
-INSERT INTO user_account VALUES ('Ian', 123.45, 1, 1);
-
+INSERT INTO user_account VALUES ('Jane','asd', 6.66, 0, 0);        -- dummy row used for testing
+commit;
+INSERT INTO user_account (name) VALUES ('Ian');
+DELETE FROM user_account WHERE name = 'Ian';	
 
 	UPDATE user_account SET balance = 4.0, approved = 0 WHERE name = 'Ian B';
     
-DELETE FROM user_account WHERE name = 'Ian B';	
         
         
     commit;
