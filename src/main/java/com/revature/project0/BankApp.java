@@ -1,5 +1,6 @@
 package com.revature.project0;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -17,27 +18,50 @@ public class BankApp {
 
 		// input loop
 		loop: while (true) {
-			System.out.println("Options:\n" + "1 to log into an account\n" + "2 to create a customer account\n"
-					+ "3 to create an admin account\n" + "0 to exit system\n" + "Enter option: ");
+			System.out.println("Options:");
+			if (u == null) {
+				System.out.println("1 to log into an account");
+			}
+
+			else {
+				System.out.println("1 to log out of: " + u.name);
+				System.out.println("4 to deposit or withdraw");
+
+			}
+			System.out.println("2 to create a customer account");
+			System.out.println("3 to create an admin account");
+
+			System.out.println("0 to exit system");
+			System.out.println("Enter option: ");
 			int option = sc.nextInt();
 			sc.nextLine();
-			logger.trace("option entered: " + option);
 
+			logger.trace("option entered: " + option);
 			switch (option) {
-			// Log in
+			// Login log out
 			case 1:
-				login();
-				changeBal();
+				if (u != null) {
+					System.out.println(u.name + " logging out...");
+					u = null;
+				} else {
+					login();
+				}
 				break;
 			// create customer account
 			case 2:
 				createCustomer();
-				changeBal();
 				break;
 			// create admin account
 			case 3:
 				createAdmin();
-				approveUsers();
+				break;
+			// create admin account
+			case 4:
+				if (u == null) {
+					System.out.println("invalid option, not logged in");
+					break;
+				}
+				changeBal();
 				break;
 			// exit system
 			case 0:
@@ -50,7 +74,7 @@ public class BankApp {
 		logger.trace("end of main.");
 	}
 
-	public static void login() {
+	public static void login() throws IOException {
 		System.out.println("Log in...");
 
 		boolean authenticated = false;
@@ -73,6 +97,7 @@ public class BankApp {
 			} else
 				authenticated = true;
 		}
+		// Runtime.getRuntime().exec("clear");
 		System.out.println("Welcome " + u.name);
 		logger.trace("User logged in: " + u);
 	}
@@ -81,14 +106,28 @@ public class BankApp {
 		System.out.println("Create a customer account");
 		createUser();
 		System.out.println(u.name + " your balance is : $" + u.balance);
+
+		changeBal();
+	}
+
+	public static void createAdmin() {
+		System.out.println("Create an admin account");
+		createUser();
+		u.admin = true;
+		System.out.println("Admin account created username: " + u.name);
+
+		approveUsers();
 	}
 
 	public static void createUser() {
 		String name = null;
-		do {
+		while (true) {
 			System.out.println("Enter a new user name: ");
 			name = sc.nextLine();
-		} while (dao.getUser(name) != null);
+			if (dao.getUser(name) == null)
+				break;
+			System.out.println("User name already exists!");
+		}
 		// logger.debug("Entered name: " + name);
 		// logger.trace("name length: " + name.length());
 		System.out.println("Enter a password: ");
@@ -127,6 +166,10 @@ public class BankApp {
 
 	public static void changeBal() {
 		System.out.println(u.name + " your current balance is : $" + u.balance);
+		if (!u.approved) {
+			System.out.println(u.name + " are not approved for deposits and withdrawals by an admin.");
+			return;
+		}
 		System.out.println(u.name + " your options are:");
 		System.out.println("-Enter 1 for deposits");
 		System.out.println("-Enter 2 for withdrawals");
@@ -147,13 +190,6 @@ public class BankApp {
 			u.withdraw(withdrawal);
 		}
 		System.out.println(u.name + " your new balance is : $" + u.balance);
-	}
-
-	public static void createAdmin() {
-		System.out.println("Create an admin account");
-		createUser();
-		u.admin = true;
-		System.out.println("Admin account created username: " + u.name);
 	}
 
 	// @Override
