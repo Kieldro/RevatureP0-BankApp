@@ -29,7 +29,7 @@ public class Tests {
 	}
 
 	 @Test
-	public void test1() {
+	public void testGetUser() {
 			String name = "Jane"; // dummy user that should be initialized in the database
 			DBAccess dao = DBAccessor.getInstance();
 			User u = dao.getUser(name);
@@ -40,12 +40,12 @@ public class Tests {
 	}
 
 	@Test
-	public void test0() {
+	public void testGetInstance() {
 		assertTrue(DBAccessor.getInstance() != null);
 	}
 
 	@Test
-	public void test2() {
+	public void test1Insert() {
 		String name = "keo";
 		User u = new User(name);
 		DBAccess dao = DBAccessor.getInstance();
@@ -56,20 +56,50 @@ public class Tests {
 		System.out.println("u.name: " + u.name);
 		System.out.println("name: " + name);
 		assertTrue(u.name.equals(name));
-
 		// fail("Not yet implemented");
+	}
+	
+	@Test
+	public void test2Delete() {
+		logger.trace("testDelete() running...");
+		String name = "keo";
+		User u = new User(name);
+		DBAccess dao = DBAccessor.getInstance();
+		dao.deleteUser(u);
 
+		u = dao.getUser(name);
+		System.out.println("User: " + u);
+		System.out.println("name: " + name);
+		assertTrue(u == null);
+		logger.trace("testDelete() finished.");
+	}
+	
+	@Test
+	public void test3Update() {
+		logger.trace("testUpdate() running...");
+		String name = "Jane";
+		DBAccess dao = DBAccessor.getInstance();
+		User u = dao.getUser(name);
+		assert(u != null);
+		System.out.println("User before update: " + u);
+
+		
+		u.balance = 42;
+		dao.updateUser(u);
+		u = dao.getUser(u.name);
+		System.out.println("User: " + u);
+//		System.out.println("u.balance: " + u.balance);
+		logger.trace("testUpdate() finished.");
 	}
 
 	@Test
-	public void test3() {
+	public void testGetCon() {
 		try (Connection con = ConnectionUtil.getConnection()) {
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 			System.err.println("SQL State: " + e.getSQLState());
 			System.err.println("Error code: " + e.getErrorCode());
 		}
-
 	}
 
 	@Test
