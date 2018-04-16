@@ -23,13 +23,13 @@ public class DBAccessor implements DBAccess {
 	public User getUser(String name) {
 		try (Connection con = ConnectionUtil.getConnection()) {
 			PreparedStatement ps = con
-					.prepareStatement("SELECT name, balance, admin, approved " + "FROM user_account WHERE name = ?");
+					.prepareStatement("SELECT name, password, balance, admin, approved " + "FROM user_account WHERE name = ?");
 			ps.setString(1, name);
 			BankApp.logger.trace("getUser query executing...");
 			ResultSet rs = ps.executeQuery();
 			BankApp.logger.trace("query done.");
 			if (rs.next()) {
-				return new User(rs.getString("name"), rs.getFloat("balance"), rs.getBoolean("admin"),
+				return new User(rs.getString("name"), rs.getString("password"), rs.getFloat("balance"), rs.getBoolean("admin"),
 						rs.getBoolean("approved"));
 			}
 		} catch (SQLException e) {
@@ -49,8 +49,10 @@ public class DBAccessor implements DBAccess {
 			int idx = 0;
 			// CallableStatement stmt = conn.prepareCall("{CALL update_pokemon(?, ?, ?, ?,
 			// ?)}");
-			PreparedStatement ps = con.prepareStatement("INSERT INTO user_account VALUES (?, ?, ?, ?)");
+			PreparedStatement ps = con.prepareStatement("INSERT INTO user_account (name, password, balance, admin, approved) "
+					+ "VALUES (?, ?, ?, ?, ?)");
 			ps.setString(++idx, u.name);
+			ps.setString(++idx, u.password);
 			ps.setFloat(++idx, u.balance);
 			ps.setBoolean(++idx, u.admin);
 			ps.setBoolean(++idx, u.approved);
@@ -113,13 +115,14 @@ public class DBAccessor implements DBAccess {
 		Map<String, User> um = new HashMap<>();
 		try (Connection con = ConnectionUtil.getConnection()) {
 			PreparedStatement ps = con
-					.prepareStatement("SELECT name, balance, admin, approved "
+					.prepareStatement("SELECT name, password, balance, admin, approved "
 							+ "FROM user_account");
 			BankApp.logger.trace("getAllUsers query executing...");
 			ResultSet rs = ps.executeQuery();
 			BankApp.logger.trace("query done.");
 			while (rs.next()) {
 				User u = new User(rs.getString("name"), 
+							rs.getString("password"), 
 							rs.getFloat("balance"),
 							rs.getBoolean("admin"),
 							rs.getBoolean("approved"));

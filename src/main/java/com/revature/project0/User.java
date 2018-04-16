@@ -12,6 +12,7 @@ public class User implements Serializable{
 	 */
 	private static final long serialVersionUID = 5539802788837931219L;
 	public String name;
+	public String password = "ttt";
 	public float balance = 0;
 	public boolean admin = false;
 	public boolean approved = false;
@@ -22,8 +23,9 @@ public class User implements Serializable{
 		users.put(name, this);
 	}
 	
-	public User(String name, float balance, boolean admin, boolean approved) {
+	public User(String name, String password,float balance, boolean admin, boolean approved) {
 		this.name = name;
+		this.password = password;
 		this.balance = balance;
 		this.admin = admin;
 		this.approved = approved;
@@ -40,7 +42,8 @@ public class User implements Serializable{
 
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", balance=" + balance + ", admin=" + admin + ", approved=" + approved + "]";
+		return "User [name=" + name + ", password=" + password + ", balance=" + balance + ", admin=" + admin
+				+ ", approved=" + approved + "]";
 	}
 
 	@Override
@@ -51,6 +54,7 @@ public class User implements Serializable{
 		result = prime * result + (approved ? 1231 : 1237);
 		result = prime * result + Float.floatToIntBits(balance);
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		return result;
 	}
 
@@ -73,6 +77,11 @@ public class User implements Serializable{
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
 			return false;
 		return true;
 	}

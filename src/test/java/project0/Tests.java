@@ -29,19 +29,19 @@ public class Tests {
 	// @DisplayName("The first test")
 	public void myFirstTest() {
 		assertEquals(true, true);
-		assertEquals("The optional assertion message is now the last parameter.", 4, 4);
+		assertEquals("The optional assertion message is the first parameter.", 4, 4);
 		assertTrue('a' < 'b');
 	}
 
-	 @Test
+	@Test
 	public void testGetUser() {
-			String name = "Jane"; // dummy user that should be initialized in the database
-			DBAccess dao = DBAccessor.getInstance();
-			User u = dao.getUser(name);
-			System.out.println("User: " + u);
-//			System.out.println("u.name: " + u.name);
-//			System.out.println("name: " + name);
-			assertTrue(u.name.equals(name));
+		String name = "Jane"; // dummy user that should be initialized in the database
+		DBAccess dao = DBAccessor.getInstance();
+		User u = dao.getUser(name);
+		System.out.println("User: " + u);
+		// System.out.println("u.name: " + u.name);
+		// System.out.println("name: " + name);
+		assertTrue(u.name.equals(name));
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class Tests {
 		assertTrue(u.name.equals(name));
 		// fail("Not yet implemented");
 	}
-	
+
 	@Test
 	public void test2Delete() {
 		logger.trace("testDelete() running...");
@@ -78,55 +78,50 @@ public class Tests {
 		assertTrue(u == null);
 		logger.trace("testDelete() finished.");
 	}
-	
+
 	@Test
 	public void test3Update() {
 		logger.trace("testUpdate() running...");
 		String name = "Jane";
 		DBAccess dao = DBAccessor.getInstance();
 		User u = dao.getUser(name);
-		assert(u != null);
+		assert (u != null);
 		System.out.println("User before update: " + u);
 
-		
 		u.balance = 42;
 		dao.updateUser(u);
 		u = dao.getUser(u.name);
 		System.out.println("User: " + u);
-//		System.out.println("u.balance: " + u.balance);
+		// System.out.println("u.balance: " + u.balance);
 		logger.trace("testUpdate() finished.");
 	}
-	
+
 	@Test
 	public void test4getAllUsers() {
 		logger.trace("testing getAllUsers()...");
-//		String name = "Jane";
+		// String name = "Jane";
 		DBAccess dao = DBAccessor.getInstance();
-		Map<String, User> um = dao.getAllUsers();;
-//		assert(u != null);
-//		System.out.println("User before update: " + u);
-		
+		Map<String, User> um = dao.getAllUsers();
+		;
+		// assert(u != null);
+		// System.out.println("User before update: " + u);
+
 		System.out.println("user map: " + um);
-//		System.out.println("u.balance: " + u.balance);
+		// System.out.println("u.balance: " + u.balance);
 		logger.trace("testGetAll() finished.");
 	}
-	
+
 	@Test
 	public void test5getAllUsers() {
 		logger.trace("testing getAllUsers5()...");
 		DBAccess dao = DBAccessor.getInstance();
 		dao.insertUser(new User("Jack"));
-		Map<String, User> um = dao.getAllUsers();;
+		Map<String, User> um = dao.getAllUsers();
 
 		System.out.println("user map: " + um);
 		logger.trace("testGetAll5() finished.");
 	}
 
-
-
-	
-	
-	
 	@Test
 	public void testGetCon() {
 		try (Connection con = ConnectionUtil.getConnection()) {
