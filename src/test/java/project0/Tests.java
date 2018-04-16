@@ -157,13 +157,13 @@ public class Tests {
 		// assertTrue(u.name == name);
 
 	}
-
-	@Before
-	public void setUp() throws Exception {
-
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
+//
+//	@Before
+//	public void setUp() throws Exception {
+//
+//	}
+//
+//	@After
+//	public void tearDown() throws Exception {
+//	}
 }

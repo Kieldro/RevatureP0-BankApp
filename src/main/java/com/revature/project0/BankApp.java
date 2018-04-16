@@ -7,47 +7,39 @@ import org.apache.log4j.Logger;
 
 public class BankApp {
 	private static Scanner sc = new Scanner(System.in);
-	private static User u;
-	final static DBAccessor doa = DBAccessor.getInstance();
-
+	private static User u = null;
+	final static DBAccessor dao = DBAccessor.getInstance();
 	final static Logger logger = Logger.getLogger(BankApp.class);
 
 	public static void main(String[] args) throws Exception {
 		// ALL, TRACE, DEBUG, INFO, WARN, ERROR and FATAL
-		// logger.all("all level");
-		// logger.trace("trace level");
-		// logger.debug("debug level");
 		logger.info("info level - System start");
-		// logger.warn("warn level");
-		// logger.error("error level");
-		// logger.fatal("fatal level");
-		
-
-		User u = doa.getUser("Ian");
-		System.out.println(u);
 
 		// input loop
 		loop: while (true) {
-			System.out.println("Options:\n" + "1 to create a customer account\n" + "2 to create an admin account\n"
-					+ "0 to exit system\n" + "Enter option: ");
+			System.out.println("Options:\n" + "1 to log into an account\n" + "2 to create a customer account\n"
+					+ "3 to create an admin account\n" + "0 to exit system\n" + "Enter option: ");
 			int option = sc.nextInt();
 			sc.nextLine();
 			logger.trace("option entered: " + option);
 
 			switch (option) {
+			// Log in
 			case 1:
-				System.out.println("Create a user account");
-				createUser();
-				System.out.println(u.name + " your balance is : $" + u.balance);
+				login();
 				changeBal();
 				break;
+			// create customer account
 			case 2:
-				System.out.println("Create an admin account");
-				createUser();
-				u.admin = true;
-				System.out.println("Admin account created username: " + u.name);
+				createCustomer();
+				changeBal();
+				break;
+			// create admin account
+			case 3:
+				createAdmin();
 				approveUsers();
 				break;
+			// exit system
 			case 0:
 				break loop;
 			}
@@ -58,20 +50,54 @@ public class BankApp {
 		logger.trace("end of main.");
 	}
 
-	public static void createUser() {
-		System.out.println("Enter new user name: ");
+	public static void login() {
+		System.out.println("Log in...");
 
+		boolean authenticated = false;
+		while (!authenticated) {
+			System.out.println("Enter your user name: ");
+			String name = sc.nextLine();
+			u = dao.getUser(name);
+			if (u == null) {
+				System.out.println("Invalid user name: " + name);
+				continue;
+			}
+
+			System.out.println("Enter your password: ");
+			String password = sc.nextLine();
+
+			if (!u.password.equals(password)) {
+				System.out.println("Invalid password for : " + name);
+				logger.trace("password entered : " + password);
+				logger.trace("password expected: " + u.password);
+			} else
+				authenticated = true;
+		}
+		System.out.println("Welcome " + u.name);
+		logger.trace("User logged in: " + u);
+	}
+
+	public static void createCustomer() {
+		System.out.println("Create a customer account");
+		createUser();
+		System.out.println(u.name + " your balance is : $" + u.balance);
+	}
+
+	public static void createUser() {
+		System.out.println("Enter a new user name: ");
 		String name = sc.nextLine();
 		logger.debug("Entered name: " + name);
 		logger.trace("name length: " + name.length());
-		u = new User(name);
-		boolean inserted = doa.insertUser(u);
-		if (inserted) {
-			logger.debug("User created: " + u.name);
-		}else {
-			logger.debug("User could NOT be created: " + u.name);
-			}
+		System.out.println("Enter a password: ");
+		String password = sc.nextLine();
 
+		u = new User(name, password, 0, false, false);
+		boolean inserted = dao.insertUser(u);
+		if (inserted) {
+			logger.debug("User created: " + u);
+		} else {
+			logger.debug("User could NOT be created: " + u);
+		}
 	}
 
 	private static void approveUsers() {
@@ -97,6 +123,7 @@ public class BankApp {
 	}
 
 	public static void changeBal() {
+		System.out.println(u.name + " your current balance is : $" + u.balance);
 		System.out.println(u.name + " your options are:");
 		System.out.println("-Enter 1 for deposits");
 		System.out.println("-Enter 2 for withdrawals");
@@ -120,11 +147,10 @@ public class BankApp {
 	}
 
 	public static void createAdmin() {
-		System.out.println("Enter new user name: ");
-
-		String name = sc.nextLine();
-		logger.trace("name entered: " + name);
-		u = new User(name);
+		System.out.println("Create an admin account");
+		createUser();
+		u.admin = true;
+		System.out.println("Admin account created username: " + u.name);
 	}
 
 	// @Override
