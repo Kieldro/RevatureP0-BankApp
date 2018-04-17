@@ -131,18 +131,17 @@ public class BankApp {
 
 	public static void createCustomer() {
 		System.out.println("Create a customer account");
-		createUser();
+		createUser(false);
 		System.out.println("Customer account created, username: " + u.name);
 	}
 
 	public static void createAdmin() {
 		System.out.println("Create an admin account");
-		createUser();
-		u.admin = true;
+		createUser(true);
 		System.out.println("Admin account created, username: " + u.name);
 	}
 
-	public static void createUser() {
+	public static void createUser(boolean admin) {
 		String name = null;
 		while (true) {
 			System.out.println("Enter a new user name: ");
@@ -156,7 +155,7 @@ public class BankApp {
 		System.out.println("Enter a password: ");
 		String password = sc.nextLine();
 
-		u = new User(name, password, 0, false, false); // logs in
+		u = new User(name, password, 0, admin, false); // logs in
 		boolean inserted = dao.insertUser(u);
 		if (inserted) {
 			logger.debug("User created: " + u);
