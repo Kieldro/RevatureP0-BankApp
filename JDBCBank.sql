@@ -8,25 +8,23 @@ CREATE TABLE user_account (
     balance    number (13,2)default 0,
     admin      INT default 0,
     approved   INT default 0,
-    CONSTRAINT pk_name PRIMARY KEY ( name ),
-    CONSTRAINT UK_user_id UNIQUE (user_id)
+    CONSTRAINT pk_name PRIMARY KEY ( name )
+--    , CONSTRAINT UK_user_id UNIQUE (user_id)
 );
---Create a Sequence to generate the value for the user id's
-CREATE SEQUENCE user_id_sequence
-    START WITH 1 
-    INCREMENT BY 1
-    MAXVALUE 900
-    MINVALUE -1
-    NOCACHE;
 
 --test commands
-SELECT * FROM user_account;
+
+TRUNCATE TABLE user_account;
 INSERT INTO user_account VALUES ('Jane','asd', 6.66, 0, 0);        -- dummy row used for testing
+INSERT INTO user_account VALUES ('keo','asd', 0, 1, 1);
 commit;
+
+SELECT * FROM user_account;
+
 INSERT INTO user_account (name) VALUES ('Ian');
 DELETE FROM user_account WHERE name = 'Ian';	
 
-	UPDATE user_account SET balance = 4.0, approved = 0 WHERE name = 'Ian B';
+UPDATE user_account SET balance = 4.0, approved = 0 WHERE name = 'Ian B';
     
         
         
@@ -35,6 +33,13 @@ DELETE FROM user_account WHERE name = 'Ian';
 
 
 
+--Create a Sequence to generate the value for the user id's
+CREATE SEQUENCE user_id_sequence
+    START WITH 1 
+    INCREMENT BY 1
+    MAXVALUE 900
+    MINVALUE -1
+    NOCACHE;
 
 --Create an INSERT trigger on Pokemon to auto-increment the PK
 CREATE OR REPLACE TRIGGER before_insert_pokemon

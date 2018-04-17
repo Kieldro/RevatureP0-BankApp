@@ -51,7 +51,7 @@ public class Tests {
 
 	@Test
 	public void test1Insert() {
-		String name = "keo";
+		String name = "ian";
 		User u = new User(name);
 		DBAccess dao = DBAccessor.getInstance();
 		dao.insertUser(u);
@@ -67,7 +67,7 @@ public class Tests {
 	@Test
 	public void test2Delete() {
 		logger.trace("testDelete() running...");
-		String name = "keo";
+		String name = "ian";
 		User u = new User(name);
 		DBAccess dao = DBAccessor.getInstance();
 		dao.deleteUser(u);

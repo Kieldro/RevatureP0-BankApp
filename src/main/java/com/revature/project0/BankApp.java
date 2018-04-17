@@ -17,8 +17,8 @@ public class BankApp {
 		logger.info("info level - System start");
 
 		// input loop
+		// no user logged in
 		loop: while (true) {
-
 			System.out.println("Options:");
 			System.out.println("1 to log into an account");
 			System.out.println("2 to create a customer account");
@@ -27,8 +27,8 @@ public class BankApp {
 			System.out.println("Enter option: ");
 			int option = sc.nextInt();
 			sc.nextLine();
-
 			logger.trace("option entered: " + option);
+
 			switch (option) {
 			// Login log out
 			case 1:
@@ -46,7 +46,7 @@ public class BankApp {
 			case 0:
 				break loop;
 			}
-			
+
 			if (u != null) {
 				loggedIn();
 			}
@@ -58,41 +58,45 @@ public class BankApp {
 
 	public static void loggedIn() {
 		if (!u.approved) {
-			System.out.println(u.name + " are not approved for deposits and withdrawals by an admin.");
-			return;
-		}		System.out.println("Options:");
-		System.out.println("1 to deposit");
-		System.out.println("2 to withdraw");
-		System.out.println("0 to log out of: " + u.name);
-		System.out.println("Enter option: ");
-
-		int option = sc.nextInt();
-		sc.nextLine();
-		logger.trace("option entered: " + option);
-		switch (option) {
-		// log out
-		case 0:
-			System.out.println(u.name + " logging out...");
+			System.out.println(u.name + " are not approved for deposits and withdrawals by an admin. Logging out...\n");
 			u = null;
 			return;
-		case 1:
-			System.out.println(u.name + " your current balance is : $" + u.balance);
-				System.out.println("Enter the amount to deposit: ");
-				System.out.print("$");
-				float deposit = sc.nextFloat();
-				logger.trace("amount entered: " + deposit);
-				u.deposit(deposit);
-//			} else if (prompt == 2) {
-//				System.out.println("Enter the amount to withdraw: ");
-//				System.out.print("$");
-//				float withdrawal = sc.nextFloat();
-//				logger.trace("amount entered: " + withdrawal);
-//				u.withdraw(withdrawal);
-//			}
-			System.out.println(u.name + " your new balance is : $" + u.balance);
-			break;
 		}
 
+		while (true) {
+			System.out.println("Options:");
+			System.out.println("1 to deposit");
+			System.out.println("2 to withdraw");
+			if (u.admin) {
+				System.out.println("3 to approve users");
+			}
+			System.out.println("0 to log out of: " + u.name);
+			System.out.println("Enter option: ");
+
+			int option = sc.nextInt();
+			sc.nextLine();
+			logger.trace("option entered: " + option);
+			if (!u.admin && option > 2) {
+				System.out.println("Invalid option for a customer. Retry...");
+				continue;
+			}
+			switch (option) {
+			// log out
+			case 0:
+				System.out.println(u.name + " logging out...");
+				u = null;
+				return;
+			case 1:
+				deposit();
+				break;
+			case 2:
+				withdraw();
+				break;
+			case 3:
+				approveUsers();
+
+			}
+		}
 	}
 
 	public static void login() throws IOException {
@@ -128,15 +132,14 @@ public class BankApp {
 	public static void createCustomer() {
 		System.out.println("Create a customer account");
 		createUser();
+		System.out.println("Customer account created, username: " + u.name);
 	}
 
 	public static void createAdmin() {
 		System.out.println("Create an admin account");
 		createUser();
 		u.admin = true;
-		System.out.println("Admin account created username: " + u.name);
-
-		approveUsers();
+		System.out.println("Admin account created, username: " + u.name);
 	}
 
 	public static void createUser() {
@@ -153,7 +156,7 @@ public class BankApp {
 		System.out.println("Enter a password: ");
 		String password = sc.nextLine();
 
-		u = new User(name, password, 0, false, false);
+		u = new User(name, password, 0, false, false); // logs in
 		boolean inserted = dao.insertUser(u);
 		if (inserted) {
 			logger.debug("User created: " + u);
@@ -173,42 +176,38 @@ public class BankApp {
 		System.out.println("Users in the system:");
 		for (String k : m.keySet()) {
 			User t = m.get(k);
-			System.out.println(k + " " + t.admin);
+			System.out.println(k + " " + t.approved);
 		}
 
 		System.out.println("Enter the name of the user to approve: ");
 		String name = sc.nextLine();
 		logger.debug("name: " + name);
-		m.get(name).approved = true;
-		System.out.println(name + " approved.");
-
+		User enteredUser = m.get(name); 
+		enteredUser.approved = true;
+		dao.updateUser(enteredUser);
+		System.out.println(enteredUser.name + " approved.");
+		logger.trace("" + dao.getUser(enteredUser.name));
 	}
 
-	public static void changeBal() {
+	public static void deposit() {
 		System.out.println(u.name + " your current balance is : $" + u.balance);
-		if (!u.approved) {
-			System.out.println(u.name + " are not approved for deposits and withdrawals by an admin.");
-			return;
-		}
-		System.out.println(u.name + " your options are:");
-		System.out.println("-Enter 1 for deposits");
-		System.out.println("-Enter 2 for withdrawals");
+		System.out.println("Enter the amount to deposit: ");
+		System.out.print("$");
+		float deposit = sc.nextFloat();
+		logger.trace("amount entered: " + deposit);
+		u.deposit(deposit);
 
-		int prompt = sc.nextInt();
-		logger.trace("prompt entered: " + prompt);
-		if (prompt == 1) {
-			System.out.println("Enter the amount to deposit: ");
-			System.out.print("$");
-			float deposit = sc.nextFloat();
-			logger.trace("amount entered: " + deposit);
-			u.deposit(deposit);
-		} else if (prompt == 2) {
-			System.out.println("Enter the amount to withdraw: ");
-			System.out.print("$");
-			float withdrawal = sc.nextFloat();
-			logger.trace("amount entered: " + withdrawal);
-			u.withdraw(withdrawal);
-		}
+		System.out.println(u.name + " your new balance is : $" + u.balance);
+	}
+
+	public static void withdraw() {
+		System.out.println(u.name + " your current balance is : $" + u.balance);
+		System.out.println("Enter the amount to withdraw: ");
+		System.out.print("$");
+		float withdrawal = sc.nextFloat();
+		logger.trace("amount entered: " + withdrawal);
+		u.withdraw(withdrawal);
+
 		System.out.println(u.name + " your new balance is : $" + u.balance);
 	}
 
