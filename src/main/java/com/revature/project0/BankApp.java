@@ -18,19 +18,11 @@ public class BankApp {
 
 		// input loop
 		loop: while (true) {
+
 			System.out.println("Options:");
-			if (u == null) {
-				System.out.println("1 to log into an account");
-			}
-
-			else {
-				System.out.println("1 to log out of: " + u.name);
-				System.out.println("4 to deposit or withdraw");
-
-			}
+			System.out.println("1 to log into an account");
 			System.out.println("2 to create a customer account");
 			System.out.println("3 to create an admin account");
-
 			System.out.println("0 to exit system");
 			System.out.println("Enter option: ");
 			int option = sc.nextInt();
@@ -40,12 +32,7 @@ public class BankApp {
 			switch (option) {
 			// Login log out
 			case 1:
-				if (u != null) {
-					System.out.println(u.name + " logging out...");
-					u = null;
-				} else {
-					login();
-				}
+				login();
 				break;
 			// create customer account
 			case 2:
@@ -55,23 +42,57 @@ public class BankApp {
 			case 3:
 				createAdmin();
 				break;
-			// create admin account
-			case 4:
-				if (u == null) {
-					System.out.println("invalid option, not logged in");
-					break;
-				}
-				changeBal();
-				break;
 			// exit system
 			case 0:
 				break loop;
 			}
+			
+			if (u != null) {
+				loggedIn();
+			}
 		}
 
 		sc.close();
-		logger.trace("scanner closed");
 		logger.trace("end of main.");
+	}
+
+	public static void loggedIn() {
+		if (!u.approved) {
+			System.out.println(u.name + " are not approved for deposits and withdrawals by an admin.");
+			return;
+		}		System.out.println("Options:");
+		System.out.println("1 to deposit");
+		System.out.println("2 to withdraw");
+		System.out.println("0 to log out of: " + u.name);
+		System.out.println("Enter option: ");
+
+		int option = sc.nextInt();
+		sc.nextLine();
+		logger.trace("option entered: " + option);
+		switch (option) {
+		// log out
+		case 0:
+			System.out.println(u.name + " logging out...");
+			u = null;
+			return;
+		case 1:
+			System.out.println(u.name + " your current balance is : $" + u.balance);
+				System.out.println("Enter the amount to deposit: ");
+				System.out.print("$");
+				float deposit = sc.nextFloat();
+				logger.trace("amount entered: " + deposit);
+				u.deposit(deposit);
+//			} else if (prompt == 2) {
+//				System.out.println("Enter the amount to withdraw: ");
+//				System.out.print("$");
+//				float withdrawal = sc.nextFloat();
+//				logger.trace("amount entered: " + withdrawal);
+//				u.withdraw(withdrawal);
+//			}
+			System.out.println(u.name + " your new balance is : $" + u.balance);
+			break;
+		}
+
 	}
 
 	public static void login() throws IOException {
@@ -100,14 +121,13 @@ public class BankApp {
 		// Runtime.getRuntime().exec("clear");
 		System.out.println("Welcome " + u.name);
 		logger.trace("User logged in: " + u);
+
+		loggedIn();
 	}
 
 	public static void createCustomer() {
 		System.out.println("Create a customer account");
 		createUser();
-		System.out.println(u.name + " your balance is : $" + u.balance);
-
-		changeBal();
 	}
 
 	public static void createAdmin() {
