@@ -11,12 +11,15 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+//import org.apache.log4j.Logger;		// old log4j 1.2
 
 public class ConnectionUtil {
-	public final static Logger log = Logger.getLogger(ConnectionUtil.class);
+	public final static Logger log = LogManager.getLogger();
 
-	private ConnectionUtil() {	// static methods only, no instantiation needed
+	private ConnectionUtil() { // static methods only, no instantiation needed
 	}
 
 	public static Connection getConnection() {

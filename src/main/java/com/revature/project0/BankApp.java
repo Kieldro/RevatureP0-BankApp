@@ -1,9 +1,12 @@
 package com.revature.project0;
 
 import static com.revature.project0.ConnectionUtil.log;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
+
+import org.apache.logging.log4j.Level;
 
 public class BankApp {
 	private static Scanner sc = new Scanner(System.in);
@@ -12,7 +15,8 @@ public class BankApp {
 
 	public static void main(String[] args) throws Exception {
 		log.info("main()...");
-
+		log.printf(Level.ERROR, "Integer.MAX_VALUE = %d", Integer.MAX_VALUE);
+		log.printf(Level.ERROR, "Long.MAX_VALUE = %s", "HELLO");
 		// input loop
 		// no user logged in
 		loop: while (true) {
