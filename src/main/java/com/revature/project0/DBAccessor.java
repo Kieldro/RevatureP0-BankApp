@@ -1,5 +1,8 @@
 package com.revature.project0;
 
+
+import static com.revature.project0.ConnectionUtil.log;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,15 +25,15 @@ public class DBAccessor implements DBAccess {
 
 	public User getUser(String name) {
 		try (Connection con = ConnectionUtil.getConnection()) {
-			PreparedStatement ps = con
-					.prepareStatement("SELECT name, password, balance, admin, approved " + "FROM user_account WHERE name = ?");
+			PreparedStatement ps = con.prepareStatement(
+					"SELECT name, password, balance, admin, approved " + "FROM user_account WHERE name = ?");
 			ps.setString(1, name);
-			BankApp.logger.trace("getUser query executing...");
+			log.trace("getUser query executing...");
 			ResultSet rs = ps.executeQuery();
-			BankApp.logger.trace("query done.");
+			log.trace("query done.");
 			if (rs.next()) {
-				return new User(rs.getString("name"), rs.getString("password"), rs.getFloat("balance"), rs.getBoolean("admin"),
-						rs.getBoolean("approved"));
+				return new User(rs.getString("name"), rs.getString("password"), rs.getFloat("balance"),
+						rs.getBoolean("admin"), rs.getBoolean("approved"));
 			}
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
@@ -38,7 +41,7 @@ public class DBAccessor implements DBAccess {
 			System.err.println("Error code: " + e.getErrorCode());
 		}
 
-		BankApp.logger.debug("No user found (Result set empty)");
+		log.debug("No user found (Result set empty)");
 		return null;
 
 	}
@@ -49,15 +52,15 @@ public class DBAccessor implements DBAccess {
 			int idx = 0;
 			// CallableStatement stmt = conn.prepareCall("{CALL update_pokemon(?, ?, ?, ?,
 			// ?)}");
-			PreparedStatement ps = con.prepareStatement("INSERT INTO user_account (name, password, balance, admin, approved) "
-					+ "VALUES (?, ?, ?, ?, ?)");
+			PreparedStatement ps = con.prepareStatement(
+					"INSERT INTO user_account (name, password, balance, admin, approved) " + "VALUES (?, ?, ?, ?, ?)");
 			ps.setString(++idx, u.name);
 			ps.setString(++idx, u.password);
 			ps.setFloat(++idx, u.balance);
 			ps.setBoolean(++idx, u.admin);
 			ps.setBoolean(++idx, u.approved);
 
-			BankApp.logger.trace("executing INSERT...");
+			log.trace("executing INSERT...");
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {
 			System.err.print(e.getMessage());
@@ -65,7 +68,7 @@ public class DBAccessor implements DBAccess {
 			System.err.println("Error code: " + e.getErrorCode());
 		}
 
-		BankApp.logger.debug("INSERT user failed: " + u);
+		log.debug("INSERT user failed: " + u);
 		return false;
 	}
 
@@ -75,7 +78,7 @@ public class DBAccessor implements DBAccess {
 			PreparedStatement ps = con.prepareStatement("DELETE FROM user_account WHERE name = ?");
 			ps.setString(1, u.name);
 
-			BankApp.logger.trace("executing DELETE...");
+			log.trace("executing DELETE...");
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
@@ -83,7 +86,7 @@ public class DBAccessor implements DBAccess {
 			System.err.println("Error code: " + e.getErrorCode());
 		}
 
-		BankApp.logger.debug("DELETE user failed: " + u);
+		log.debug("DELETE user failed: " + u);
 		return false;
 	}
 
@@ -91,14 +94,14 @@ public class DBAccessor implements DBAccess {
 		// UPDATE user_account SET balance = 4.0, approved = 0 WHERE name = ?;
 		try (Connection con = ConnectionUtil.getConnection()) {
 			int idx = 0;
-			PreparedStatement ps = con.prepareStatement("UPDATE user_account SET "
-					+ "balance = ?, approved = ?, admin = ? WHERE name = ?");
-			ps.setFloat  (++idx, u.balance);
+			PreparedStatement ps = con.prepareStatement(
+					"UPDATE user_account SET " + "balance = ?, approved = ?, admin = ? WHERE name = ?");
+			ps.setFloat(++idx, u.balance);
 			ps.setBoolean(++idx, u.approved);
 			ps.setBoolean(++idx, u.admin);
-			ps.setString (++idx, u.name);
+			ps.setString(++idx, u.name);
 
-			BankApp.logger.trace("executing UPDATE to User..." + u);
+			log.trace("executing UPDATE to User..." + u);
 			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
@@ -106,7 +109,7 @@ public class DBAccessor implements DBAccess {
 			System.err.println("Error code: " + e.getErrorCode());
 		}
 
-		BankApp.logger.debug("UPDATE user modified 0 rows: " + u);
+		log.debug("UPDATE user modified 0 rows: " + u);
 		return false;
 	}
 
@@ -115,17 +118,13 @@ public class DBAccessor implements DBAccess {
 		Map<String, User> um = new HashMap<>();
 		try (Connection con = ConnectionUtil.getConnection()) {
 			PreparedStatement ps = con
-					.prepareStatement("SELECT name, password, balance, admin, approved "
-							+ "FROM user_account");
-			BankApp.logger.trace("getAllUsers query executing...");
+					.prepareStatement("SELECT name, password, balance, admin, approved " + "FROM user_account");
+			log.trace("getAllUsers query executing...");
 			ResultSet rs = ps.executeQuery();
-			BankApp.logger.trace("query done.");
+			log.trace("query done.");
 			while (rs.next()) {
-				User u = new User(rs.getString("name"), 
-							rs.getString("password"), 
-							rs.getFloat("balance"),
-							rs.getBoolean("admin"),
-							rs.getBoolean("approved"));
+				User u = new User(rs.getString("name"), rs.getString("password"), rs.getFloat("balance"),
+						rs.getBoolean("admin"), rs.getBoolean("approved"));
 				um.put(u.name, u);
 			}
 		} catch (SQLException e) {
@@ -134,7 +133,7 @@ public class DBAccessor implements DBAccess {
 			System.err.println("Error code: " + e.getErrorCode());
 		}
 
-		BankApp.logger.debug("getAll elements in map: " + um.size());
+		log.debug("getAll elements in map: " + um.size());
 		return um;
 	}
 }

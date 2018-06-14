@@ -1,20 +1,17 @@
 package com.revature.project0;
 
+import static com.revature.project0.ConnectionUtil.log;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
-
-import org.apache.log4j.Logger;
 
 public class BankApp {
 	private static Scanner sc = new Scanner(System.in);
 	private static User u = null;
 	final static DBAccessor dao = DBAccessor.getInstance();
-	final static Logger logger = Logger.getLogger(BankApp.class);
 
 	public static void main(String[] args) throws Exception {
-		// ALL, TRACE, DEBUG, INFO, WARN, ERROR and FATAL
-		logger.info("info level - System start");
+		log.info("main()...");
 
 		// input loop
 		// no user logged in
@@ -27,7 +24,7 @@ public class BankApp {
 			System.out.println("Enter option: ");
 			int option = sc.nextInt();
 			sc.nextLine();
-			logger.trace("option entered: " + option);
+			log.trace("option entered: " + option);
 
 			switch (option) {
 			// Login log out
@@ -53,7 +50,7 @@ public class BankApp {
 		}
 
 		sc.close();
-		logger.trace("end of main.");
+		log.info("end of main.");
 	}
 
 	public static void loggedIn() {
@@ -75,7 +72,7 @@ public class BankApp {
 
 			int option = sc.nextInt();
 			sc.nextLine();
-			logger.trace("option entered: " + option);
+			log.trace("option entered: " + option);
 			if (!u.admin && option > 2) {
 				System.out.println("Invalid option for a customer. Retry...");
 				continue;
@@ -117,14 +114,14 @@ public class BankApp {
 
 			if (!u.password.equals(password)) {
 				System.out.println("Invalid password for : " + name);
-				logger.trace("password entered : " + password);
-				logger.trace("password expected: " + u.password);
+				log.trace("password entered : " + password);
+				log.trace("password expected: " + u.password);
 			} else
 				authenticated = true;
 		}
 		// Runtime.getRuntime().exec("clear");
 		System.out.println("Welcome " + u.name);
-		logger.trace("User logged in: " + u);
+		log.trace("User logged in: " + u);
 
 		loggedIn();
 	}
@@ -150,17 +147,17 @@ public class BankApp {
 				break;
 			System.out.println("User name already exists!");
 		}
-		// logger.debug("Entered name: " + name);
-		// logger.trace("name length: " + name.length());
+		// log.debug("Entered name: " + name);
+		// log.trace("name length: " + name.length());
 		System.out.println("Enter a password: ");
 		String password = sc.nextLine();
 
 		u = new User(name, password, 0, admin, false); // logs in
 		boolean inserted = dao.insertUser(u);
 		if (inserted) {
-			logger.debug("User created: " + u);
+			log.debug("User created: " + u);
 		} else {
-			logger.debug("User could NOT be created: " + u);
+			log.debug("User could NOT be created: " + u);
 		}
 	}
 
@@ -180,12 +177,12 @@ public class BankApp {
 
 		System.out.println("Enter the name of the user to approve: ");
 		String name = sc.nextLine();
-		logger.debug("name: " + name);
-		User enteredUser = m.get(name); 
+		log.debug("name: " + name);
+		User enteredUser = m.get(name);
 		enteredUser.approved = true;
 		dao.updateUser(enteredUser);
 		System.out.println(enteredUser.name + " approved.");
-		logger.trace("" + dao.getUser(enteredUser.name));
+		log.trace("" + dao.getUser(enteredUser.name));
 	}
 
 	public static void deposit() {
@@ -193,7 +190,7 @@ public class BankApp {
 		System.out.println("Enter the amount to deposit: ");
 		System.out.print("$");
 		float deposit = sc.nextFloat();
-		logger.trace("amount entered: " + deposit);
+		log.trace("amount entered: " + deposit);
 		u.deposit(deposit);
 
 		System.out.println(u.name + " your new balance is : $" + u.balance);
@@ -204,7 +201,7 @@ public class BankApp {
 		System.out.println("Enter the amount to withdraw: ");
 		System.out.print("$");
 		float withdrawal = sc.nextFloat();
-		logger.trace("amount entered: " + withdrawal);
+		log.trace("amount entered: " + withdrawal);
 		u.withdraw(withdrawal);
 
 		System.out.println(u.name + " your new balance is : $" + u.balance);

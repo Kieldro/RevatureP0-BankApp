@@ -1,5 +1,6 @@
 package project0;
 
+import static com.revature.project0.ConnectionUtil.log;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -9,21 +10,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-import com.revature.project0.BankApp;
 import com.revature.project0.ConnectionUtil;
 import com.revature.project0.DBAccess;
 import com.revature.project0.DBAccessor;
 import com.revature.project0.User;
 
 public class Tests {
-	final static Logger logger = Logger.getLogger(BankApp.class);
 
 	@Test
 	// @DisplayName("The first test")
@@ -66,7 +60,7 @@ public class Tests {
 
 	@Test
 	public void test2Delete() {
-		logger.trace("testDelete() running...");
+		log.trace("testDelete() running...");
 		String name = "ian";
 		User u = new User(name);
 		DBAccess dao = DBAccessor.getInstance();
@@ -76,12 +70,12 @@ public class Tests {
 		System.out.println("User: " + u);
 		System.out.println("name: " + name);
 		assertTrue(u == null);
-		logger.trace("testDelete() finished.");
+		log.trace("testDelete() finished.");
 	}
 
 	@Test
 	public void test3Update() {
-		logger.trace("testUpdate() running...");
+		log.trace("testUpdate() running...");
 		String name = "Jane";
 		DBAccess dao = DBAccessor.getInstance();
 		User u = dao.getUser(name);
@@ -93,12 +87,12 @@ public class Tests {
 		u = dao.getUser(u.name);
 		System.out.println("User: " + u);
 		// System.out.println("u.balance: " + u.balance);
-		logger.trace("testUpdate() finished.");
+		log.trace("testUpdate() finished.");
 	}
 
 	@Test
 	public void test4getAllUsers() {
-		logger.trace("testing getAllUsers()...");
+		log.trace("testing getAllUsers()...");
 		// String name = "Jane";
 		DBAccess dao = DBAccessor.getInstance();
 		Map<String, User> um = dao.getAllUsers();
@@ -108,18 +102,18 @@ public class Tests {
 
 		System.out.println("user map: " + um);
 		// System.out.println("u.balance: " + u.balance);
-		logger.trace("testGetAll() finished.");
+		log.trace("testGetAll() finished.");
 	}
 
 	@Test
 	public void test5getAllUsers() {
-		logger.trace("testing getAllUsers5()...");
+		log.trace("testing getAllUsers5()...");
 		DBAccess dao = DBAccessor.getInstance();
 		dao.insertUser(new User("Jack"));
 		Map<String, User> um = dao.getAllUsers();
 
 		System.out.println("user map: " + um);
-		logger.trace("testGetAll5() finished.");
+		log.trace("testGetAll5() finished.");
 	}
 
 	@Test
@@ -139,10 +133,10 @@ public class Tests {
 			PreparedStatement ps = con
 					.prepareStatement("SELECT name, balance, admin, approved " + "FROM user_account WHERE name = ?");
 			ps.setString(1, name);
-			logger.trace("query executing...");
+			log.trace("query executing...");
 			ResultSet rs = ps.executeQuery();
 			//
-			// logger.trace("query done.");
+			// log.trace("query done.");
 			// if (rs.next()) {
 			// new User(rs.getString("name"), rs.getFloat("balance"),
 			// rs.getBoolean("admin"),
@@ -157,13 +151,13 @@ public class Tests {
 		// assertTrue(u.name == name);
 
 	}
-//
-//	@Before
-//	public void setUp() throws Exception {
-//
-//	}
-//
-//	@After
-//	public void tearDown() throws Exception {
-//	}
+	//
+	// @Before
+	// public void setUp() throws Exception {
+	//
+	// }
+	//
+	// @After
+	// public void tearDown() throws Exception {
+	// }
 }

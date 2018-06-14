@@ -6,21 +6,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
 public class ConnectionUtil {
-	static Logger logger;
-	private ConnectionUtil() {
-		logger = BankApp.logger;
+	public final static Logger log = Logger.getLogger(ConnectionUtil.class);
+
+	private ConnectionUtil() {	// static methods only, no instantiation needed
 	}
-	
+
 	public static Connection getConnection() {
 		InputStream in = null;
 		Properties p = new Properties();
@@ -49,9 +47,9 @@ public class ConnectionUtil {
 		}
 		return null;
 	}
-	
+
 	public static void printRS(ResultSet rs) throws SQLException {
-		logger.debug("Printing ResultSet");
+		log.debug("Printing ResultSet");
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int columnsNumber = rsmd.getColumnCount();
 		while (rs.next()) {
